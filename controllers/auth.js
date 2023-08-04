@@ -4,7 +4,6 @@ const User = require('../models/user');
 const { generateJWT } = require('../helpers/jwt');
 
 const createUser = async (req, res = response) => {
-
   const { email, password } = req.body;
 
   try {
@@ -92,7 +91,6 @@ const loginUser = async (req, res = response) => {
 }
 
 const renewToken = async (req, res = response) => {
-
   const { uid, name } = req;
 
   // Generar JWT
