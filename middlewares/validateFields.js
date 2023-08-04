@@ -1,7 +1,7 @@
 const { response } = require('express');
 const { validationResult } = require('express-validator');
 
-const fileValitor = (req, res = response, next) => {
+const validateFields = (req, res = response, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
@@ -15,5 +15,5 @@ const fileValitor = (req, res = response, next) => {
 }
 
 module.exports = {
-  fileValitor
+  validateFields
 }

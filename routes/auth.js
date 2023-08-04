@@ -3,7 +3,7 @@
 
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { fileValitor } = require('../middlewares/fileValidator');
+const { validateFields } = require('../middlewares/validateFields');
 const { createUser, loginUser, renewToken } = require('../controllers/auth');
 const { validateJWT } = require('../middlewares/validateJWT');
 
@@ -15,7 +15,7 @@ router.post(
     check('name', 'El nombre es obligatorio').not().isEmpty(),
     check('email', 'El email es obligatorio').isEmail(),
     check('password', 'El password debe tener al menos 6 caracteres').isLength({ min: 6 }),
-    fileValitor
+    validateFields
   ],
   createUser
 );
@@ -25,7 +25,7 @@ router.post(
   [// Middlewares
     check('email', 'El email es obligatorio').isEmail(),
     check('password', 'El password debe tener al menos 6 caracteres').isLength({ min: 6 }),
-    fileValitor
+    validateFields
   ],
   loginUser
 );
