@@ -2,6 +2,7 @@ const express = require('express');
 require('dotenv').config(
   {
     path: '.env.local'
+    // path: '.env.prod'
   }
 );
 const { dbConnection } = require('./database/config');
