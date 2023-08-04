@@ -35,17 +35,81 @@ const createEvents = async (req, res = response) => {
 }
 
 const updateEvents = async (req, res = response) => {
-  res.json({
-    ok: true,
-    msg: 'updateEvents'
-  });
+  const eventID = req.params.id;
+  const uid = req.uid;
+
+  try {
+    const event = await Event.findById(eventID);
+
+    if ( !event ) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'Evento no existe por ese id'
+      });
+    }
+
+    if ( event.user.toString() !== uid ) {
+      return res.status(401).json({
+        ok: false,
+        msg: 'No tiene privilegio de editar este evento'
+      });
+    }
+
+    const newEvent = {
+      ...req.body,
+      user: uid
+    }
+
+    const eventSave = await Event.findByIdAndUpdate(eventID, newEvent, { new: true });
+    
+    res.json({
+      ok: true,
+      event: eventSave
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: 'Error inesperado..., Contacte al administrador'
+    });
+  }
 }
 
 const deleteEvents = async (req, res = response) => {
-  res.json({
-    ok: true,
-    msg: 'deleteEvents'
-  });
+  const eventID = req.params.id;
+  const uid = req.uid;
+
+  try {
+    const event = await Event.findById(eventID);
+
+    if ( !event ) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'Evento no existe por ese id'
+      });
+    }
+
+    if ( event.user.toString() !== uid ) {
+      return res.status(401).json({
+        ok: false,
+        msg: 'No tiene privilegio de editar este evento'
+      });
+    }
+
+    await Event.findByIdAndDelete(eventID);
+    
+    res.json({
+      ok: true
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: 'Error inesperado..., Contacte al administrador'
+    });
+  }
 }
 
 module.exports = {
