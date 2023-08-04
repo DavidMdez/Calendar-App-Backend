@@ -34,20 +34,54 @@ const createUser = async (req, res = response) => {
 
     res.status(500).json({
       ok: false,
-      msg: 'Error inesperado...'
+      msg: 'Error inesperado..., Contacte al administrador'
     });
   }
 }
 
-const loginUser = (req, res = response) => {
+const loginUser = async (req, res = response) => {
   const { email, password } = req.body;
 
-  res.status(201).json({
-    ok: true,
-    msg: 'login',
-    email,
-    password
-  });
+  try{
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      console.log('Usuario no existe');
+
+      return res.status(400).json({
+        ok: false,
+        msg: 'Usuario y Contraseña no son correctos'
+      });
+    }
+
+    // Confirmar los passwords
+    const validPassword = bcrypt.compareSync(password, user.password);
+
+    if (!validPassword) {
+      console.log('Contraseña incorrecta');
+
+      return res.status(400).json({
+        ok: false,
+        msg: 'Usuario y Contraseña no son correctos'
+      });
+    }
+
+    // Generar JWT
+    
+    res.json({
+      ok: true,
+      uid: user.id,
+      name: user.name
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      ok: false,
+      msg: 'Error inesperado..., Contacte al administrador'
+    });
+  }
 }
 
 const renewToken = (req, res = response) => {
