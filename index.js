@@ -27,6 +27,14 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/events', require('./routes/events'));
 
+app.get('/*', (req, res) => {
+  res.sendFile(__dirname + '/public/index.html');
+});
+
+app.get('/auth/*', (req, res) => {
+  res.sendFile(__dirname + '/public/index.html');
+});
+
 // Escuchar peticiones
 app.listen(process.env.PORT || 3000, () => {
   console.log(`Servidor corriendo en puerto ${process.env.PORT}`)
